@@ -15,7 +15,7 @@ class Votes extends Model {}
             user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                referneces: {
+                references: {
                     model: 'user',
                     key: 'id'
                 }
