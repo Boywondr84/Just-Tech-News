@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post, User, Votes, Comment } = require('../../models');
+const { Post, User, Vote, Comment } = require('../../models');
 const sequelize = require('../../config/connection');
 
 // get all users
@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     Post.findAll({
         attributes: [
             'id', 'post_url', 'title', 'created_at',
-            [sequelize.literal('(SELECT COUNT(*) FROM votes WHERE post.id = votes.post_id)'), 'vote_count']
+            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
         ],
         order: [['created_at', 'DESC']],
         // Query configuration
@@ -41,7 +41,7 @@ router.get('/:id', (req, res) => {
             id: req.params.id
         },
         attributes: ['id', 'post_url', 'title', 'created_at',
-        [sequelize.literal('(SELECT COUNT(*) FROM votes WHERE post.id = votes.post_id)'), 'vote_count']
+        [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
     ],
         include: [
             // Comment model
@@ -88,7 +88,7 @@ router.post('/', (req, res) => {
 // PUT /api/posts/upvote
 router.put('/upvote', (req, res) => {
     // custom static method created in models/Post.js
-    Post.upvote(req.body, { Votes })
+    Post.upvote(req.body, { Vote })
                 .then(updatedPostData => res.json(updatedPostData))
                 .catch(err => {
                     console.log(err);

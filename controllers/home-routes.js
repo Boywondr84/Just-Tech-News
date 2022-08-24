@@ -2,20 +2,6 @@ const router = require('express').Router();
 const sequelize = require('sequelize');
 const { Comment, Post, User, Votes } = require('../models');
 
-// router.get('/', (req, res) => {
-//     res.render('homepage', {
-//         id: 1,
-//         post_url: 'https://handlebarsjs.com/guide/',
-//         title: 'Handlebars Docs',
-//         created_at: new Date(),
-//         vote_count: 10,
-//         comments: [{}, {}],
-//         user: {
-//             username: 'test_user'
-//         }
-//     });
-// });
-
 router.get('/', (req, res) => {
     console.log('============');
     Post.findAll({
@@ -51,5 +37,14 @@ router.get('/', (req, res) => {
             res.status(500).json(err);
         });
 });
+
+router.get('/login', (req, res) => {
+    if (req.session) {
+        res.redirect('/');
+        return;
+    }
+    res.render('login');
+});
+
 
 module.exports = router;
