@@ -1,18 +1,19 @@
 const router = require('express').Router();
-const sequelize = require('sequelize');
-const { Comment, Post, User, Votes } = require('../models');
+const sequelize = require('../config/connection');
+const { Post, User, Comment, Vote } = require('../models');
 
+// get all posts for homepage
 router.get('/', (req, res) => {
-    console.log('============');
+    console.log('======================');
     Post.findAll({
         attributes: [
-            'id', 'post_url', 'title', 'created_at',
-            [sequelize.literal('(SELECT COUNT(*) FROM votes WHERE post.id = votes.post_id)'), 'vote_count']
+            'id',
+            'post_url',
+            'title',
+            'created_at',
+            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
         ],
-        order: [['created_at', 'DESC']],
-        // Query configuration
         include: [
-            // Comment model here:
             {
                 model: Comment,
                 attributes: ['id', 'comment_text', 'post_id', 'user_id'],
@@ -28,8 +29,8 @@ router.get('/', (req, res) => {
         ]
     })
         .then(dbPostData => {
-            // console.log(dbPostData[0]);
             const posts = dbPostData.map(post => post.get({ plain: true }));
+
             res.render('homepage', { posts });
         })
         .catch(err => {
@@ -39,12 +40,12 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    if (req.session) {
+    if (req.session.loggedIn) {
         res.redirect('/');
         return;
     }
+
     res.render('login');
 });
-
 
 module.exports = router;
