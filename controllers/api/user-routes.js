@@ -22,7 +22,7 @@ router.get('/:id', (req, res) => {
         include: [
             {
                 model: Post,
-                attributes: ['id', 'title', 'post_url', 'created_at']
+                attributes: ['id', 'title', 'post_url']
             },
             {
                 model: Comment,
@@ -87,14 +87,15 @@ router.post('/login', (req, res) => {
             return;
         }
 
-        const validPassword = dbUserData.checkPassword(req.body.password);
+        // const validPassword = dbUserData.checkPassword(req.body.password);
 
-        if (!validPassword) {
-            res.status(400).json({ message: 'Incorrect password!' });
-            return;
-        }
+        // if (!validPassword) {
+        //     res.status(400).json({ message: 'Incorrect password!' });
+        //     return;
+        // }
 
         req.session.save(() => {
+            // session variables
             req.session.user_id = dbUserData.id;
             req.session.username = dbUserData.username;
             req.session.loggedIn = true;

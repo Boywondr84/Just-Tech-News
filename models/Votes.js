@@ -14,7 +14,6 @@ class Vote extends Model {}
         // What goes here?
             user_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
                 references: {
                     model: 'user',
                     key: 'id'
@@ -23,7 +22,6 @@ class Vote extends Model {}
 
             post_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
                 references: {
                     model: 'post',
                     key: 'id'
